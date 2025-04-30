@@ -11,6 +11,8 @@ public class HomePage extends Page{
         PageFactory.initElements(webDriver, this);
     }
 
+    @FindBy(xpath = "//*[@id=\"/content/header/header/catalogEntrypoint\"]")
+    private WebElement catalogButton;
 
     @FindBy(xpath = "//*[@id=\"HeaderSearchLightId\"]/div[1]/button")
     private WebElement searchButton;
@@ -50,5 +52,9 @@ public class HomePage extends Page{
     public void enterSearchInput(String text) {
         searchInput.click();
         searchInput.sendKeys(text);
+    }
+
+    public void clickCatalogButton(){
+        catalogButton.click();
     }
 }
