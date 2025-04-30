@@ -18,6 +18,8 @@ public class SearchPage extends Page{
     private WebElement emptySearchPage;
 
 
+
+
     public WebElement getSearchTitle() {
         return searchTitle;
     }
