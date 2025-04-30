@@ -9,11 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,30 +56,32 @@ public class SearchOnHomePageTest {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Войдите, и станет дешевле']\n")));
         actions.moveByOffset(100, 100).click().perform();
 
+
         homePage.clickBelowMarketButton();
-        homePage.clickForYouButton();
-        By tiles = By.cssSelector(
-                "div[data-cs-name='navigate'] a[data-auto='snippet-link']");
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(tiles, 0));
 
 
-        homePage.clickFirstGood();
-        // клик по случайному товару  откроется НОВАЯ вкладка
+
+        WebElement firstGood = driver.findElement(By.xpath("//*[@id='superprice_remix_desktop_RecommendationRoll']//a[@data-auto='snippet-link']"));
+
         String originalHandle = driver.getWindowHandle();
         Set<String> oldHandles = driver.getWindowHandles();
 
-        // переключаемся на появившуюся вкладку
+        firstGood.click();
+
         wait.until(d -> d.getWindowHandles().size() > oldHandles.size());
-        for (String h : driver.getWindowHandles()) {
-            if (!h.equals(originalHandle)) {
-                driver.switchTo().window(h);
+
+        for (String handle : driver.getWindowHandles()) {
+            if (!handle.equals(originalHandle)) {
+                driver.switchTo().window(handle);
                 break;
             }
         }
 
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"/content/page/fancyPage/defaultPage/productTitle\"]/div/div/h1")));
         String currentUrl = driver.getCurrentUrl();
-        boolean isProductPage = currentUrl.matches("https://market\\.yandex\\.ru/product--.+/\\d+.*");
-        assertTrue(isProductPage, "Открытая страница не является страницей товара: " + currentUrl);
+        System.out.println("Текущий URL: " + currentUrl);
+
+        assertTrue(currentUrl.contains("product--"), "URL не содержит 'product--'. Текущий URL: " + currentUrl);
 
 
     }

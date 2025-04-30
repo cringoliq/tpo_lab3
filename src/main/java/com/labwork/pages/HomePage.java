@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import javax.print.DocFlavor;
+import java.util.List;
 
 public class HomePage extends Page{
     public HomePage(WebDriver webDriver) {
@@ -44,6 +45,14 @@ public class HomePage extends Page{
     private WebElement marketHeader;
 //a[@href='/catalog--muzhskaia-odezhda/54404675']
 
+
+    @FindBy(css = "div[data-cs-name='navigate'] a[data-auto='snippet-link']")
+    private List<WebElement> goods;
+
+
+    public void clickFirstGood(){
+        goods.get(0).click();
+    }
 
     public void clickMarketHeader(){
         marketHeader.click();
