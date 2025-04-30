@@ -17,6 +17,7 @@ public class CartPage extends Page{
     private WebElement instantBuyButton;
     @FindBy(xpath= "//*[@id=\"cartCheckoutButton\"]")
     private WebElement checkoutButton;
+
     public void clickInCardButton(){
         inCardButton.click();
     }

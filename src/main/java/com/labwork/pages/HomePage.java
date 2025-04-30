@@ -85,4 +85,7 @@ public class HomePage extends Page{
     public void clickCatalogButton(){
         catalogButton.click();
     }
+    public void clickCartButton(){
+        cartButton.click();
+    }
 }

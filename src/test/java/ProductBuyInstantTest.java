@@ -17,7 +17,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ProductBuyTest {
+public class ProductBuyInstantTest {
     private static DriverInit driverInit;
     private static WebDriver driver;
     private static WebDriverWait wait;
@@ -102,43 +102,11 @@ public class ProductBuyTest {
                 break;
             }
         }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"/content/page/fancyPage/defaultPage/mainDO/actions\"]/div/div/div/div[2]/div/button")));
-        cartPage.clickInCardButton();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"/content/page/fancyPage/defaultPage/mainDO/actions\"]/div/div/div/div[1]/button[1]")));
 
-        String originalHandleCart = driver.getWindowHandle();
-        Set<String> oldHandlesCart = driver.getWindowHandles();
-
-        homePage.clickCartButton();
-
-        wait.until(d -> d.getWindowHandles().size() > oldHandles.size());
-
-        for (String handle : driver.getWindowHandles()) {
-            if (!handle.equals(originalHandle)) {
-                driver.switchTo().window(handle);
-                break;
-            }
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"cartCheckoutButton\"]")));
-        cartPage.clickCheckoutButton();
+        cartPage.clickInstantBuyButton();
 
         String titleText = checkoutPage.getTitle().getText();
 
-        assertTrue(titleText.startsWith("Оформление"), titleText);
-
-//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"/content/notification\"]/div")));
-//        cartPage.clickInCardButton();
-
-//        cartPage.clickCheckoutButton();
-
-//        wait.until(d -> d.getWindowHandles().size() > oldHandles.size());
-//
-//        for (String handle : driver.getWindowHandles()) {
-//            if (!handle.equals(originalHandle)) {
-//                driver.switchTo().window(handle);
-//                break;
-//            }
-//        }
-
-
-    }
+        assertTrue(titleText.startsWith("Оформление"), titleText);    }
 }

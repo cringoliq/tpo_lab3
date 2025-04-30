@@ -13,7 +13,7 @@ public class AuthUtils {
                 String[] parts = line.split(";");
                 if (parts.length == 2) {
                     creds[0] = parts[0]; // Логин
-                    creds[1] = parts[1]; // Пароль
+                    creds[1] = parts[1];
                 }
             }
         } catch (IOException e) {
