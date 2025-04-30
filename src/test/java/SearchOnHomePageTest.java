@@ -1,13 +1,14 @@
-
 import com.labwork.DriverInit;
 import com.labwork.pages.CatalogPage;
 import com.labwork.pages.ElectronicsPage;
 import com.labwork.pages.HomePage;
-import org.junit.jupiter.api.*;
+import com.labwork.pages.SearchPage;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,70 +18,53 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SearchByCatalogTest {
-
-    private DriverInit driverInit;
-    private WebDriver      driver;
-    private WebDriverWait  wait;
-    private JavascriptExecutor js;
-
-    private HomePage       homePage;
-    private CatalogPage    catalogPage;
-    private ElectronicsPage electronicsPage;
+public class SearchOnHomePageTest {
+    private static DriverInit driverInit;
+    private static WebDriver driver;
+    private static WebDriverWait wait;
+    private static JavascriptExecutor js;
     private static Actions actions;
 
-
+    private static HomePage homePage;
+    private static SearchPage searchPage;
+    private static CatalogPage catalogPage;
+    private static ElectronicsPage electronicsPage;
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         driverInit = new DriverInit();
         driverInit.setupDriver();
-
         driver = driverInit.getDriver();
-        wait   = driverInit.getWait();
-        js     = driverInit.getJs();
-        actions = new Actions(driver);
+        wait = driverInit.getWait();
+        js = driverInit.getJs();
 
-
-        homePage        = new HomePage(driver);
-        catalogPage     = new CatalogPage(driver);
+        homePage = new HomePage(driver);
+        searchPage = new SearchPage(driver);
+        catalogPage = new CatalogPage(driver);
         electronicsPage = new ElectronicsPage(driver);
-
+        actions = new Actions(driver);
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         driver.quit();
     }
 
     @Test
-    void openCatalogAndChooseRandomGoodTest() {
-
-        homePage.clickCatalogButton();
-        wait.until(ExpectedConditions
-                .visibilityOf(catalogPage.getCatalogPanel()));
-
-
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"/marketfrontDynamicPopupLoader44/content\"]/div/div/a\n")));
-
+    public void searchTest(){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Войдите, и станет дешевле']\n")));
         actions.moveByOffset(100, 100).click().perform();
 
-
-
-        // перейти в «Электроника»
-        wait.until(ExpectedConditions
-                .elementToBeClickable(catalogPage.getElectronicsLink()));
-        catalogPage.openElectronics();
-
-        // дождаться появления карточек
+        homePage.clickBelowMarketButton();
+        homePage.clickForYouButton();
         By tiles = By.cssSelector(
                 "div[data-cs-name='navigate'] a[data-auto='snippet-link']");
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(tiles, 0));
 
+
+        homePage.clickFirstGood();
         // клик по случайному товару  откроется НОВАЯ вкладка
         String originalHandle = driver.getWindowHandle();
         Set<String> oldHandles = driver.getWindowHandles();
-        electronicsPage.chooseRandomGood();
 
         // переключаемся на появившуюся вкладку
         wait.until(d -> d.getWindowHandles().size() > oldHandles.size());
@@ -91,12 +75,10 @@ public class SearchByCatalogTest {
             }
         }
 
-        // ждём загрузки страницы товара и проверяем URL
-        wait.withTimeout(Duration.ofSeconds(10))
-                .until(ExpectedConditions.urlContains("/product"));
-        assertTrue(driver.getCurrentUrl().contains("/product"),
-                "Страница товара не открылась");
+        String currentUrl = driver.getCurrentUrl();
+        boolean isProductPage = currentUrl.matches("https://market\\.yandex\\.ru/product--.+/\\d+.*");
+        assertTrue(isProductPage, "Открытая страница не является страницей товара: " + currentUrl);
+
+
     }
-
-
 }

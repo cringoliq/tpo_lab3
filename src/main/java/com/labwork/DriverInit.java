@@ -22,8 +22,8 @@ public class DriverInit {
         WebDriverManager.chromedriver().driverVersion("135.0.7049.114").setup();
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(25));
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
 
         driver.manage().window().setSize(new Dimension(1050, 716));
         js = (JavascriptExecutor) driver;
