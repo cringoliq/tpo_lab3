@@ -17,11 +17,13 @@ public class SearchPage extends Page{
     @FindBy(xpath = "//*[@id=\"/content/page/fancyPage/marketNotFoundEntrypoint/emptySearchPage\"]/div/div/div/h1")
     private WebElement emptySearchPage;
 
+
     public WebElement getSearchTitle() {
         return searchTitle;
     }
     public WebElement getEmptySearchPage() {
         return emptySearchPage;
     }
+
 
 }
