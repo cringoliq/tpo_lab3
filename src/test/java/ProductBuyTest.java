@@ -60,9 +60,10 @@ public class ProductBuyTest {
 
         authPage.clickMoreWaysButton();
         authPage.clickByLoginButton();
+        String login = AuthUtils.getCredentialsFromFile("/home/extrzz/stuff/verySecretPassword")[0];
 
-        authPage.enterLoginField("lomaniinoss");
-        String password = AuthUtils.getPasswordFromFile("/home/extrzz/stuff/verySecretPassword");
+        authPage.enterLoginField(login);
+        String password = AuthUtils.getCredentialsFromFile("/home/extrzz/stuff/verySecretPassword")[1];
         authPage.enterPasswordField(password);
 
         // Ждем, пока пользователь введет код доступа вручную
@@ -99,21 +100,19 @@ public class ProductBuyTest {
         }
 
         cartPage.clickInCardButton();
-        Thread.sleep(2000);
-        String originalHandleCart = driver.getWindowHandle();
-        Set<String> oldHandlesCart = driver.getWindowHandles();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"/content/notification\"]/div")));
         cartPage.clickInCardButton();
 
+//        cartPage.clickCheckoutButton();
 
-        wait.until(d -> d.getWindowHandles().size() > oldHandlesCart.size());
-
-        for (String handle : driver.getWindowHandles()) {
-            if (!handle.equals(originalHandleCart)) {
-                driver.switchTo().window(handle);
-                break;
-            }
-        }
-        cartPage.clickCheckoutButton();
+//        wait.until(d -> d.getWindowHandles().size() > oldHandles.size());
+//
+//        for (String handle : driver.getWindowHandles()) {
+//            if (!handle.equals(originalHandle)) {
+//                driver.switchTo().window(handle);
+//                break;
+//            }
+//        }
 
 
         Thread.sleep(10000);
