@@ -36,8 +36,6 @@ public class HomePage extends Page{
     @FindBy(xpath = "//*[@id=\"CART_ENTRY_POINT_ANCHOR\"]/a/div")
     private WebElement cartButton;
 
-    @FindBy(xpath = "//*[@id=\"/content/header/header/catalogEntrypoint\"]/div/noindex[1]/button")
-    private WebElement catalogButton;
 
     @FindBy(xpath = "//*[@id=\"/MarketNodeHeaderCatalog42\"]/div/div[1]/div/ul/li[5]/a/img")
     private WebElement nodeHeader;
@@ -54,9 +52,6 @@ public class HomePage extends Page{
         ordersButton.click();
     }
 
-    public void clickCatalogButton(){
-        catalogButton.click();
-    }
     public void clickNodeHeader(){
         nodeHeader.click();
     }
