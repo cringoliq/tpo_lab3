@@ -54,7 +54,65 @@ public class ProductBuyTest {
     public void tearDown() {
         driver.quit();
     }
+    @Test
+    public void testLoginWithEmptyCredentials() {
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", loginButton);
 
+        authPage.clickMoreWaysButton();
+        authPage.clickByLoginButton();
+
+        authPage.enterLoginField("");
+
+
+        WebElement marketTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"field:input-login:hint\"]")));
+        String titleText = marketTitle.getText();
+        assertTrue(titleText.startsWith("Логин"), titleText);
+    }
+
+
+
+    @Test
+    public void testLoginWithInvalidLoginCredentials() {
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", loginButton);
+
+        authPage.clickMoreWaysButton();
+        authPage.clickByLoginButton();
+
+        String incorrectLogin = "~~~~~~~~~~~~~KFSKDF";
+        authPage.enterLoginField(incorrectLogin);
+
+
+
+        WebElement marketTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"field:input-login:hint\"]")));
+        String titleText = marketTitle.getText();
+        System.out.println(titleText);
+        assertTrue(titleText.startsWith("Такой"), titleText);
+    }
+
+    @Test
+    public void testLoginWithInvalidPasswordCredentials() {
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", loginButton);
+
+        authPage.clickMoreWaysButton();
+        authPage.clickByLoginButton();
+
+        String incorrectLogin = "lomaniinoss";
+        authPage.enterLoginField(incorrectLogin);
+
+        authPage.enterPasswordField("90000000000");
+
+
+        WebElement marketTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"field:input-passwd:hint\"]\n")));
+        String titleText = marketTitle.getText();
+        System.out.println(titleText);
+        assertTrue(titleText.startsWith("Неверный"), titleText);
+    }
     @Test
     public void productBuyTest() throws InterruptedException {
         WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
