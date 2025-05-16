@@ -11,32 +11,21 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SearchByInputTest {
+public class SearchByInputTest extends BaseTest {
 
-
-    private static DriverInit driverInit;
-    private static WebDriver driver;
-    private static WebDriverWait wait;
-    private static JavascriptExecutor js;
     private static HomePage homePage;
     private static SearchPage searchPage;
 
     @BeforeEach
     public void setUp() {
-        driverInit = new DriverInit();
-        driverInit.setupDriver();
-        driver = driverInit.getDriver();
-        wait = driverInit.getWait();
-        js = driverInit.getJs();
 
-        homePage = new HomePage(driver);
-        searchPage = new SearchPage(driver);
+        homePage = new HomePage(chromeDriver);
+        searchPage = new SearchPage(chromeDriver);
+        chromeDriver.get("https://market.yandex.ru/");
+
     }
 
-    @AfterEach
-    public void tearDown() {
-        driver.quit();
-    }
+
 
     @Test
     public void searchFoundTest() {
@@ -56,4 +45,6 @@ public class SearchByInputTest {
 
         assertTrue(titleText.startsWith("Такого у нас нет"), titleText);
     }
+
+
 }

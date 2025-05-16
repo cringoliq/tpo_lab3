@@ -17,6 +17,11 @@ public class HomePage extends Page{
     @FindBy(xpath = "//*[@id=\"/content/header/header/catalogEntrypoint\"]")
     private WebElement catalogButton;
 
+    @FindBy(xpath = "//*[@id=\"/content/page/fancyPage/recommendationRollTabs/recommendationRolls/remix_desktop_width_6-RecommendationRoll/content/lazyGenerator/initialContent/recomLayoutItem_21#1:7274212_2/content/content/toggleWishlist\"]/div/button")
+    private WebElement addToWishlistButton;
+
+    @FindBy(xpath = "//*[@id=\"/content/header/header/wishlistButton\"]/a")
+    private WebElement whishlistButton;
 
     @FindBy(xpath = "//*[@id=\"HeaderSearchLightId\"]/div[1]/button")
     private WebElement searchButton;
@@ -27,7 +32,7 @@ public class HomePage extends Page{
     @FindBy(xpath = "//*[@id=\"main_tab\"]")
     private WebElement forYouButton;
 
-    @FindBy(xpath = "//*[@id=\"profitable_goods_tab\"]")
+    @FindBy(xpath = "//*[@id=\"profitable_goods_tab\"]\n")
     private WebElement belowMarketButton;
 
     @FindBy(xpath = "//*[@id=\"/content/header/header/ordersButton\"]/a/div")
@@ -61,6 +66,12 @@ public class HomePage extends Page{
         ordersButton.click();
     }
 
+    public void clickWishlistButton(){
+        whishlistButton.click();
+    }
+    public void clickAddToWishlistButton(){
+        addToWishlistButton.click();
+    }
     public void clickNodeHeader(){
         nodeHeader.click();
     }

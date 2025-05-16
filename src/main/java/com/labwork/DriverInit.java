@@ -1,12 +1,14 @@
 package com.labwork;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Getter;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 
 import javax.annotation.processing.Generated;
 import java.time.Duration;
@@ -14,64 +16,45 @@ import java.time.Duration;
 @Getter
 public class DriverInit {
 
-    public WebDriver driver;
-    public JavascriptExecutor js;
-    public WebDriverWait wait;
+    private WebDriver chromeDriver;
+    private JavascriptExecutor chromeJs;
+    private WebDriverWait chromeWait;
 
-    public void setupDriver() {
-        WebDriverManager.chromedriver().driverVersion("135.0.7049.114").setup();
-        driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(25));
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+    private WebDriver firefoxDriver;
+    private JavascriptExecutor firefoxJs;
+    private WebDriverWait firefoxWait;
 
-        driver.manage().window().setSize(new Dimension(1050, 716));
-        js = (JavascriptExecutor) driver;
-        driver.get("https://market.yandex.ru/");
+    public void setupDrivers() {
+        // Настройка Chrome
+        WebDriverManager.chromedriver().driverVersion("136.0.7103.113").setup();
+        chromeDriver = new ChromeDriver();
+        chromeWait = new WebDriverWait(chromeDriver, Duration.ofSeconds(25));
+        chromeDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
+        chromeDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
+        chromeDriver.manage().window().setSize(new Dimension(1050, 716));
+        chromeJs = (JavascriptExecutor) chromeDriver;
+        chromeDriver.get("https://market.yandex.ru/");
+
+        // Настройка Firefox
+//        WebDriverManager.firefoxdriver().setup();
+//        firefoxDriver = new FirefoxDriver();
+//        firefoxWait = new WebDriverWait(firefoxDriver, Duration.ofSeconds(25));
+//        firefoxDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+//        firefoxDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
+//        firefoxDriver.manage().window().setSize(new Dimension(1050, 716));
+//        firefoxJs = (JavascriptExecutor) firefoxDriver;
+//        firefoxDriver.get("https://market.yandex.ru/");
     }
 
-    public void quitDriver() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
+    public void quitDrivers() {
+        if (chromeDriver != null) {
+            chromeDriver.quit();
+            chromeDriver = null;
         }
+//        if (firefoxDriver != null) {
+//            firefoxDriver.quit();
+//            firefoxDriver = null;
+//        }
     }
 }
-//package com.labwork;
-//
-//import io.github.bonigarcia.wdm.WebDriverManager;
-//import lombok.Getter;
-//import org.openqa.selenium.Dimension;
-//import org.openqa.selenium.JavascriptExecutor;
-//import org.openqa.selenium.WebDriver;
-//import org.openqa.selenium.firefox.FirefoxDriver;
-//import org.openqa.selenium.support.ui.WebDriverWait;
-//
-//import java.time.Duration;
-//
-//@Getter
-//public class DriverInit {
-//
-//    public WebDriver driver;
-//    public JavascriptExecutor js;
-//    public WebDriverWait wait;
-//
-//    public void setupDriver() {
-//        WebDriverManager.firefoxdriver().setup(); // Подключаем Firefox driver
-//        driver = new FirefoxDriver();             // Инициализируем Firefox
-//        wait = new WebDriverWait(driver, Duration.ofSeconds(25));
-//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-//        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
-//
-//        driver.manage().window().setSize(new Dimension(1050, 716));
-//        js = (JavascriptExecutor) driver;
-//        driver.get("https://market.yandex.ru/");
-//    }
-//
-//    public void quitDriver() {
-//        if (driver != null) {
-//            driver.quit();
-//            driver = null;
-//        }
-//    }
-//}
+

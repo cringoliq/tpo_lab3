@@ -12,56 +12,154 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.Scanner;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ProductBuyInstantTest {
-    private static DriverInit driverInit;
-    private static WebDriver driver;
-    private static WebDriverWait wait;
-    private static JavascriptExecutor js;
-    private static Actions actions;
+public class ProductBuyInstantTest extends BaseTest{
 
-    private static HomePage homePage;
-    private static SearchPage searchPage;
-    private static CatalogPage catalogPage;
-    private static ElectronicsPage electronicsPage;
-    private static AuthPage authPage;
-    private static CartPage cartPage;
-    private static CheckoutPage checkoutPage;
+    private HomePage homePageChrome;
+    private SearchPage searchPageChrome;
+    private CatalogPage catalogPageChrome;
+    private ElectronicsPage electronicsPageChrome;
+    private AuthPage authPageChrome;
+    private CartPage cartPageChrome;
+    private CheckoutPage checkoutPageChrome;
+
+    private HomePage homePageFirefox;
+    private SearchPage searchPageFirefox;
+    private CatalogPage catalogPageFirefox;
+    private ElectronicsPage electronicsPageFirefox;
+    private AuthPage authPageFirefox;
+    private CartPage cartPageFirefox;
+    private CheckoutPage checkoutPageFirefox;
+
 
     @BeforeEach
     public void setUp() {
-        driverInit = new DriverInit();
-        driverInit.setupDriver();
-        driver = driverInit.getDriver();
-        wait = driverInit.getWait();
-        js = driverInit.getJs();
 
-        homePage = new HomePage(driver);
-        searchPage = new SearchPage(driver);
-        catalogPage = new CatalogPage(driver);
-        authPage = new AuthPage(driver);
-        cartPage = new CartPage(driver);
-        electronicsPage = new ElectronicsPage(driver);
-        actions = new Actions(driver);
-        checkoutPage = new CheckoutPage(driver);
+
+        // Инициализация страниц для Chrome
+        homePageChrome = new HomePage(chromeDriver);
+        searchPageChrome = new SearchPage(chromeDriver);
+        catalogPageChrome = new CatalogPage(chromeDriver);
+        authPageChrome = new AuthPage(chromeDriver);
+        cartPageChrome = new CartPage(chromeDriver);
+        electronicsPageChrome = new ElectronicsPage(chromeDriver);
+        checkoutPageChrome = new CheckoutPage(chromeDriver);
+
+        // Инициализация страниц для Firefox
+        homePageFirefox = new HomePage(firefoxDriver);
+        searchPageFirefox = new SearchPage(firefoxDriver);
+        catalogPageFirefox = new CatalogPage(firefoxDriver);
+        authPageFirefox = new AuthPage(firefoxDriver);
+        cartPageFirefox = new CartPage(firefoxDriver);
+        electronicsPageFirefox = new ElectronicsPage(firefoxDriver);
+        checkoutPageFirefox = new CheckoutPage(firefoxDriver);
+
+        // Открываем страницу в обоих браузерах
+        chromeDriver.get("https://market.yandex.ru/");
+        firefoxDriver.get("https://market.yandex.ru/");
+
+
+
+
+
+
+//*[@id="passp-field-otp"]
     }
-
-    @AfterEach
-    public void tearDown() {
-        driver.quit();
-    }
-
     @Test
-    public void productBuyTest() throws InterruptedException {
-        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+    public void productBuyTest2() throws InterruptedException {
+        //runTestInBrowser(chromeDriver, chromeWait, authPageChrome, homePageChrome, cartPageChrome, checkoutPageChrome);
+        runTestInBrowser(firefoxDriver, firefoxWait, authPageFirefox, homePageFirefox, cartPageFirefox, checkoutPageFirefox);
+    }
+    private void runTestInBrowser(WebDriver driver,
+                                  org.openqa.selenium.support.ui.WebDriverWait wait,
+                                  AuthPage authPage,
+                                  HomePage homePage,
+                                  CartPage cartPage,
+                                  CheckoutPage checkoutPage) throws InterruptedException {
+        Thread.sleep(5000);
+        handleCaptchaIfPresent(driver);
+        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("/html/body/div[1]/div/div[1]/div[2]/div/header/div[1]/div/div/noindex/nav/ul/li[5]/div/div/div/div/div/a\n")
+        ));
+        element.click();
+        authPage.clickMoreWaysButton();
+        authPage.clickByLoginButton();
 
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click();", loginButton);
+        String login = AuthUtils.getCredentialsFromFile("/home/extrzz/stuff/verySecretPassword")[0];
+        authPage.enterLoginField(login);
 
+        String password = AuthUtils.getCredentialsFromFile("/home/extrzz/stuff/verySecretPassword")[1];
+        authPage.enterPasswordField(password);
+
+        System.out.println("Пожалуйста, введите код доступа вручную и нажмите Enter.");
+        Scanner scanner = new Scanner(System.in);
+        String accessCode = scanner.nextLine();
+        authPage.enterPhoneCodeField(accessCode);
+        Thread.sleep(2000);
+        homePage.clickBelowMarketButton();
+
+        WebElement firstGood = driver.findElement(By.xpath("//*[@id='superprice_remix_desktop_RecommendationRoll']//a[@data-auto='snippet-link']"));
+
+        String originalHandle = driver.getWindowHandle();
+        Set<String> oldHandles = driver.getWindowHandles();
+
+        firstGood.click();
+
+        wait.until(d -> d.getWindowHandles().size() > oldHandles.size());
+
+        for (String handle : driver.getWindowHandles()) {
+            if (!handle.equals(originalHandle)) {
+                driver.switchTo().window(handle);
+                break;
+            }
+        }
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"/content/page/fancyPage/defaultPage/mainDO/actions\"]/div/div/div/div[1]/button[1]")));
+
+        cartPage.clickInstantBuyButton();
+
+        String titleText = checkoutPage.getTitle().getText();
+
+        assertTrue(titleText.startsWith("Оформление"), titleText);
+
+        // Закрываем дополнительное окно и возвращаемся на исходное
+        driver.close();
+        driver.switchTo().window(originalHandle);
+    }
+    private void handleCaptchaIfPresent(WebDriver driver) {
+
+        if (isCaptchaPage(driver)) {
+            System.out.println("Обнаружена капча. Пожалуйста, решите её вручную и нажмите Enter...");
+            new Scanner(System.in).nextLine(); // Ждем ручного подтверждения
+
+        }
+    }
+
+    private boolean isCaptchaPage(WebDriver driver) {
+        String url = driver.getCurrentUrl().toLowerCase();
+        String source = driver.getPageSource().toLowerCase();
+        return url.contains("showcaptcha");
+    }
+
+
+/*
+        @Test
+        public void productBuyTest() throws InterruptedException {
+//        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+//
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//        js.executeScript("arguments[0].click();", loginButton);
+//
+ //        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[@id=\"/content/header/header/personalization/profile\"]/div/a\n")
+        ));
+
+        element.click();
         authPage.clickMoreWaysButton();
         authPage.clickByLoginButton();
         String login = AuthUtils.getCredentialsFromFile("/home/extrzz/stuff/verySecretPassword")[0];
@@ -76,8 +174,6 @@ public class ProductBuyInstantTest {
         // Ожидаем, что пользователь введет код и нажмет Enter
 
         // Вводим код
-        authPage.clickByCodeVariationsButton();
-        authPage.clickCodeBySmsButton();
         Scanner scanner = new Scanner(System.in);
         String accessCode = scanner.nextLine();  // Чтение кода из консоли
 
@@ -108,5 +204,9 @@ public class ProductBuyInstantTest {
 
         String titleText = checkoutPage.getTitle().getText();
 
-        assertTrue(titleText.startsWith("Оформление"), titleText);    }
+        assertTrue(titleText.startsWith("Оформление"), titleText);
+         }
+ */
 }
+
+

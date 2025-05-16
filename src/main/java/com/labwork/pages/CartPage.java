@@ -18,6 +18,12 @@ public class CartPage extends Page{
     @FindBy(xpath= "//*[@id=\"cartCheckoutButton\"]")
     private WebElement checkoutButton;
 
+    @FindBy(xpath = "//*[@id=\"/content/page/fancyPage/defaultPage/wishlist/wishlistToggle\"]/div/button")
+    private WebElement wishlistButton;
+
+    public void clickWishlistButton(){
+        wishlistButton.click();
+    }
     public void clickInCardButton(){
         inCardButton.click();
     }

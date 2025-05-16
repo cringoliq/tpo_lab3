@@ -30,7 +30,7 @@ public class AuthPage extends Page {
     @FindBy(xpath = "//*[@id=\"root\"]/div/div[2]/div[2]/div/div/div[2]/div[3]/div/div/div/div/div[4]/button")
     private WebElement nextButton;
 
-    @FindBy(xpath = "//*[@id=\"passp-field-phoneCode\"]")
+    @FindBy(xpath = "//*[@id=\"passp-field-otp\"]")
     private WebElement phoneCodeField;
 
 
@@ -55,8 +55,14 @@ public class AuthPage extends Page {
         loginField.sendKeys(login);
         signInButton.click();
     }
-    public void enterPasswordField(String password) {
+    public void enterPasswordField(String password)  {
         passwordField.sendKeys(password);
+        signInButton.click();
+    }
+
+    public void enterLongPasswordField(String password) throws InterruptedException {
+        passwordField.sendKeys(password);
+        Thread.sleep(3000);
         signInButton.click();
     }
     public void enterPhoneCodeField(String phone) {

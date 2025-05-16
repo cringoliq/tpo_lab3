@@ -11,18 +11,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.junit.jupiter.api.*;
 
 import java.util.Scanner;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ProductBuyTest {
-    private static DriverInit driverInit;
-    private static WebDriver driver;
-    private static WebDriverWait wait;
-    private static JavascriptExecutor js;
-    private static Actions actions;
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class ProductBuyTest extends BaseTest {
+
 
     private static HomePage homePage;
     private static SearchPage searchPage;
@@ -34,31 +32,31 @@ public class ProductBuyTest {
 
     @BeforeEach
     public void setUp() {
-        driverInit = new DriverInit();
-        driverInit.setupDriver();
-        driver = driverInit.getDriver();
-        wait = driverInit.getWait();
-        js = driverInit.getJs();
 
-        homePage = new HomePage(driver);
-        searchPage = new SearchPage(driver);
-        catalogPage = new CatalogPage(driver);
-        authPage = new AuthPage(driver);
-        cartPage = new CartPage(driver);
-        electronicsPage = new ElectronicsPage(driver);
-        actions = new Actions(driver);
-        checkoutPage = new CheckoutPage(driver);
+
+        homePage = new HomePage(chromeDriver);
+        searchPage = new SearchPage(chromeDriver);
+        catalogPage = new CatalogPage(chromeDriver);
+        authPage = new AuthPage(chromeDriver);
+        cartPage = new CartPage(chromeDriver);
+        electronicsPage = new ElectronicsPage(chromeDriver);
+        checkoutPage = new CheckoutPage(chromeDriver);
+        chromeDriver.get("https://market.yandex.ru/");
+
     }
 
-    @AfterEach
-    public void tearDown() {
-        driver.quit();
-    }
+
     @Test
+    @Order(1)
     public void testLoginWithEmptyCredentials() {
-        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click();", loginButton);
+        WebElement element = chromeWait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[@id=\"/content/header/header/personalization/profile\"]/div/a\n")
+        ));
+
+        element.click();
+//        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//        js.executeScript("arguments[0].click();", loginButton);
 
         authPage.clickMoreWaysButton();
         authPage.clickByLoginButton();
@@ -66,7 +64,7 @@ public class ProductBuyTest {
         authPage.enterLoginField("");
 
 
-        WebElement marketTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"field:input-login:hint\"]")));
+        WebElement marketTitle = chromeWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"field:input-login:hint\"]")));
         String titleText = marketTitle.getText();
         assertTrue(titleText.startsWith("Логин"), titleText);
     }
@@ -74,11 +72,17 @@ public class ProductBuyTest {
 
 
     @Test
+    @Order(2)
     public void testLoginWithInvalidLoginCredentials() {
-        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click();", loginButton);
+//        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//        js.executeScript("arguments[0].click();", loginButton);
 
+        WebElement element = chromeWait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[@id=\"/content/header/header/personalization/profile\"]/div/a\n")
+        ));
+
+        element.click();
         authPage.clickMoreWaysButton();
         authPage.clickByLoginButton();
 
@@ -87,18 +91,24 @@ public class ProductBuyTest {
 
 
 
-        WebElement marketTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"field:input-login:hint\"]")));
+        WebElement marketTitle = chromeWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"field:input-login:hint\"]")));
         String titleText = marketTitle.getText();
         System.out.println(titleText);
         assertTrue(titleText.startsWith("Такой"), titleText);
     }
 
     @Test
+    @Order(3)
     public void testLoginWithInvalidPasswordCredentials() {
-        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click();", loginButton);
+//        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//        js.executeScript("arguments[0].click();", loginButton);
 
+        WebElement element = chromeWait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[@id=\"/content/header/header/personalization/profile\"]/div/a\n")
+        ));
+
+        element.click();
         authPage.clickMoreWaysButton();
         authPage.clickByLoginButton();
 
@@ -108,18 +118,24 @@ public class ProductBuyTest {
         authPage.enterPasswordField("90000000000");
 
 
-        WebElement marketTitle = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"field:input-passwd:hint\"]\n")));
+        WebElement marketTitle = chromeWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"field:input-passwd:hint\"]\n")));
         String titleText = marketTitle.getText();
         System.out.println(titleText);
         assertTrue(titleText.startsWith("Неверный"), titleText);
     }
     @Test
+    @Order(4)
     public void productBuyTest() throws InterruptedException {
-        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+//        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[span[text()='Войти']]")));
+//
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//        js.executeScript("arguments[0].click();", loginButton);
 
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click();", loginButton);
+        WebElement element = chromeWait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[@id=\"/content/header/header/personalization/profile\"]/div/a\n")
+        ));
 
+        element.click();
         authPage.clickMoreWaysButton();
         authPage.clickByLoginButton();
         String login = AuthUtils.getCredentialsFromFile("/home/extrzz/stuff/verySecretPassword")[0];
@@ -133,9 +149,7 @@ public class ProductBuyTest {
 
         // Ожидаем, что пользователь введет код и нажмет Enter
 
-        // Вводим код
-        authPage.clickByCodeVariationsButton();
-        authPage.clickCodeBySmsButton();
+
         Scanner scanner = new Scanner(System.in);
         String accessCode = scanner.nextLine();  // Чтение кода из консоли
 
@@ -143,40 +157,43 @@ public class ProductBuyTest {
 
         homePage.clickBelowMarketButton();
 
+        ((JavascriptExecutor) chromeDriver).executeScript("document.body.style.zoom='50%'");
 
 
-        WebElement firstGood = driver.findElement(By.xpath("//*[@id='superprice_remix_desktop_RecommendationRoll']//a[@data-auto='snippet-link']"));
+        WebElement firstGood = chromeDriver.findElement(By.xpath("//*[@id='superprice_remix_desktop_RecommendationRoll']//a[@data-auto='snippet-link']"));
 
-        String originalHandle = driver.getWindowHandle();
-        Set<String> oldHandles = driver.getWindowHandles();
+        String originalHandle = chromeDriver.getWindowHandle();
+        Set<String> oldHandles = chromeDriver.getWindowHandles();
 
         firstGood.click();
 
-        wait.until(d -> d.getWindowHandles().size() > oldHandles.size());
+        chromeWait.until(d -> d.getWindowHandles().size() > oldHandles.size());
 
-        for (String handle : driver.getWindowHandles()) {
+        for (String handle : chromeDriver.getWindowHandles()) {
             if (!handle.equals(originalHandle)) {
-                driver.switchTo().window(handle);
+                chromeDriver.switchTo().window(handle);
                 break;
             }
         }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"/content/page/fancyPage/defaultPage/mainDO/actions\"]/div/div/div/div[2]/div/button")));
+        chromeWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"/content/page/fancyPage/defaultPage/mainDO/actions\"]/div/div/div/div[2]/div/button")));
+
         cartPage.clickInCardButton();
 
-        String originalHandleCart = driver.getWindowHandle();
-        Set<String> oldHandlesCart = driver.getWindowHandles();
+        String originalHandleCart = chromeDriver.getWindowHandle();
+        Set<String> oldHandlesCart = chromeDriver.getWindowHandles();
 
+        Thread.sleep(2000);
         homePage.clickCartButton();
 
-        wait.until(d -> d.getWindowHandles().size() > oldHandles.size());
+        chromeWait.until(d -> d.getWindowHandles().size() > oldHandles.size());
 
-        for (String handle : driver.getWindowHandles()) {
+        for (String handle : chromeDriver.getWindowHandles()) {
             if (!handle.equals(originalHandle)) {
-                driver.switchTo().window(handle);
+                chromeDriver.switchTo().window(handle);
                 break;
             }
         }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"cartCheckoutButton\"]")));
+        chromeWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"cartCheckoutButton\"]")));
         cartPage.clickCheckoutButton();
 
         String titleText = checkoutPage.getTitle().getText();
@@ -199,4 +216,6 @@ public class ProductBuyTest {
 
 
     }
+
+
 }
