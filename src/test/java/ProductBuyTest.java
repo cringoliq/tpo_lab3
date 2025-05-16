@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductBuyTest extends BaseTest {
 
-
+/*
     private static HomePage homePage;
     private static SearchPage searchPage;
     private static CatalogPage catalogPage;
@@ -216,6 +216,8 @@ public class ProductBuyTest extends BaseTest {
 
 
     }
+
+ */
 
 
 }

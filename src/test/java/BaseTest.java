@@ -1,58 +1,137 @@
+//import com.labwork.DriverInit;
+//import org.junit.jupiter.api.AfterAll;
+//import org.junit.jupiter.api.AfterEach;
+//import org.junit.jupiter.api.BeforeAll;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.openqa.selenium.JavascriptExecutor;
+//import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.support.ui.WebDriverWait;
+//
+//public class BaseTest {
+//
+//
+//    private static WebDriver chromeDriver;
+//    private static WebDriverWait chromeWait;
+//    private static JavascriptExecutor chromeJs;
+//
+//    private static WebDriver firefoxDriver;
+//    private static WebDriverWait firefoxWait;
+//    private static JavascriptExecutor firefoxJs;
+//
+//    private static DriverInit driverInit = new DriverInit();
+//
+//    @BeforeAll
+//    public static void setUp() {
+//        WebDriver cDriver = driverInit.initChromeDriver();
+//        if (cDriver == null) {
+//            throw new RuntimeException("Failed to initialize ChromeDriver!");
+//        }
+//        chromeDriver = cDriver;
+//        chromeWait = driverInit.getChromeWait(cDriver);
+//        chromeJs = driverInit.getChromeJs(cDriver);
+//
+//        WebDriver fDriver = driverInit.initFirefoxDriver();
+//        if (fDriver == null) {
+//            throw new RuntimeException("Failed to initialize FirefoxDriver!");
+//        }
+//        firefoxDriver = fDriver;
+//        firefoxWait = driverInit.getFirefoxWait(fDriver);
+//        firefoxJs = driverInit.getFirefoxJs(fDriver);
+//    }
+//
+//    @AfterAll
+//    public static void tearDown() {
+//        if (chromeDriver != null) {
+//            chromeDriver.quit();
+//            chromeDriver = null;
+//            chromeWait= null;
+//            chromeJs= null;
+//        }
+//        if (firefoxDriver != null) {
+//            firefoxDriver.quit();
+//            firefoxDriver= null;
+//            firefoxWait= null;
+//            firefoxJs= null;
+//        }
+//    }
+//
+//    protected WebDriver getChromeDriver() {
+//        return chromeDriver;
+//    }
+//    protected WebDriverWait getChromeWait() {
+//        return chromeWait;
+//    }
+//    protected JavascriptExecutor getChromeJs() {
+//        return chromeJs;
+//    }
+//
+//    protected WebDriver getFirefoxDriver() {
+//        return firefoxDriver;
+//    }
+//    protected WebDriverWait getFirefoxWait() {
+//        return firefoxWait;
+//    }
+//    protected JavascriptExecutor getFirefoxJs() {
+//        return firefoxJs;
+//    }
+//}
 import com.labwork.DriverInit;
-import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.AfterAll;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.JavascriptExecutor;
 
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BaseTest {
 
-    protected DriverInit driverInit;
+    private static final ThreadLocal<WebDriver> chromeDriver = new ThreadLocal<>();
+    private static final ThreadLocal<WebDriverWait> chromeWait = new ThreadLocal<>();
+    private static final ThreadLocal<JavascriptExecutor> chromeJs = new ThreadLocal<>();
 
-    protected WebDriver chromeDriver;
-    protected WebDriverWait chromeWait;
-    protected JavascriptExecutor chromeJs;
-    protected Actions chromeActions;
+    private static final ThreadLocal<WebDriver> firefoxDriver = new ThreadLocal<>();
+    private static final ThreadLocal<WebDriverWait> firefoxWait = new ThreadLocal<>();
+    private static final ThreadLocal<JavascriptExecutor> firefoxJs = new ThreadLocal<>();
 
-    protected WebDriver firefoxDriver;
-    protected WebDriverWait firefoxWait;
-    protected JavascriptExecutor firefoxJs;
-    protected Actions firefoxActions;
+    private static final DriverInit driverInit = new DriverInit();
 
-    @BeforeAll
-    void globalSetUp() {
-        driverInit = new DriverInit();
-        driverInit.setupDrivers();
+    protected void setUpDrivers() {
+        if (chromeDriver.get() == null) {
+            WebDriver cDriver = driverInit.initChromeDriver();
+            if (cDriver == null) throw new RuntimeException("Failed to initialize ChromeDriver!");
+            chromeDriver.set(cDriver);
+            chromeWait.set(driverInit.getChromeWait(cDriver));
+            chromeJs.set(driverInit.getChromeJs(cDriver));
+        }
 
-        // инициализация для Chrome
-        chromeDriver = driverInit.getChromeDriver();
-        chromeWait = driverInit.getChromeWait();
-        chromeJs = driverInit.getChromeJs();
-        chromeActions = new Actions(chromeDriver);
-
-         //инициализация для Firefox
-//        firefoxDriver = driverInit.getFirefoxDriver();
-//        firefoxWait = driverInit.getFirefoxWait();
-//        firefoxJs = driverInit.getFirefoxJs();
-//        firefoxActions = new Actions(firefoxDriver);
-
-//        if (chromeDriver == null || firefoxDriver == null) {
-//            throw new RuntimeException("One or both drivers are null after setup!");
-//        }
+        if (firefoxDriver.get() == null) {
+            WebDriver fDriver = driverInit.initFirefoxDriver();
+            if (fDriver == null) throw new RuntimeException("Failed to initialize FirefoxDriver!");
+            firefoxDriver.set(fDriver);
+            firefoxWait.set(driverInit.getFirefoxWait(fDriver));
+            firefoxJs.set(driverInit.getFirefoxJs(fDriver));
+        }
     }
 
     @AfterAll
-    void globalTearDown() {
-        if (chromeDriver != null) {
-            chromeDriver.quit();
-            chromeDriver = null;
+    public static void cleanUpAll() {
+        if (chromeDriver.get() != null) {
+            chromeDriver.get().quit();
+            chromeDriver.remove();
+            chromeWait.remove();
+            chromeJs.remove();
         }
-//        if (firefoxDriver != null) {
-//            firefoxDriver.quit();
-//            firefoxDriver = null;
-//        }
+        if (firefoxDriver.get() != null) {
+            firefoxDriver.get().quit();
+            firefoxDriver.remove();
+            firefoxWait.remove();
+            firefoxJs.remove();
+        }
     }
+
+    protected WebDriver getChromeDriver() { return chromeDriver.get(); }
+    protected WebDriverWait getChromeWait() { return chromeWait.get(); }
+    protected JavascriptExecutor getChromeJs() { return chromeJs.get(); }
+
+    protected WebDriver getFirefoxDriver() { return firefoxDriver.get(); }
+    protected WebDriverWait getFirefoxWait() { return firefoxWait.get(); }
+    protected JavascriptExecutor getFirefoxJs() { return firefoxJs.get(); }
 }

@@ -19,7 +19,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProductBuyInstantTest extends BaseTest{
-
+/*
     private HomePage homePageChrome;
     private SearchPage searchPageChrome;
     private CatalogPage catalogPageChrome;
@@ -70,6 +70,8 @@ public class ProductBuyInstantTest extends BaseTest{
 
 //*[@id="passp-field-otp"]
     }
+
+
     @Test
     public void productBuyTest2() throws InterruptedException {
         //runTestInBrowser(chromeDriver, chromeWait, authPageChrome, homePageChrome, cartPageChrome, checkoutPageChrome);

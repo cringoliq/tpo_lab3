@@ -32,7 +32,7 @@ public class HomePage extends Page{
     @FindBy(xpath = "//*[@id=\"main_tab\"]")
     private WebElement forYouButton;
 
-    @FindBy(xpath = "//*[@id=\"profitable_goods_tab\"]\n")
+    @FindBy(xpath = "//*[@id=\"profitable_goods_tab\"]")
     private WebElement belowMarketButton;
 
     @FindBy(xpath = "//*[@id=\"/content/header/header/ordersButton\"]/a/div")

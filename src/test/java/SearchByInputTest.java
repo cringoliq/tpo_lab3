@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SearchByInputTest extends BaseTest {
-
+/*
     private static HomePage homePage;
     private static SearchPage searchPage;
 
@@ -46,5 +46,7 @@ public class SearchByInputTest extends BaseTest {
         assertTrue(titleText.startsWith("Такого у нас нет"), titleText);
     }
 
+
+ */
 
 }

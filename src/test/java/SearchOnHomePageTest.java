@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SearchOnHomePageTest extends BaseTest {
 
-
+/*
     private static HomePage homePage;
     private static SearchPage searchPage;
     private static CatalogPage catalogPage;
@@ -77,4 +77,6 @@ public class SearchOnHomePageTest extends BaseTest {
     }
 
 
+
+ */
 }

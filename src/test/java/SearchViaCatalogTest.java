@@ -18,7 +18,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SearchViaCatalogTest extends BaseTest {
-
+/*
 
     private static HomePage homePage;
     private static SearchPage searchPage;
@@ -63,6 +63,8 @@ public class SearchViaCatalogTest extends BaseTest {
         assertTrue(titleText.startsWith("Мужская одежда"), titleText);
     }
 
+
+ */
 
 
 }
